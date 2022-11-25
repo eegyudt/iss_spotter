@@ -22,7 +22,7 @@ const fetchMyIP = function(callback) {
     }
 
     const data = JSON.parse(body);
-    
+
     if (!data.ip) {
       return callback('no data found', null);
     }
@@ -32,15 +32,29 @@ const fetchMyIP = function(callback) {
   });
 };
 
-module.exports = { fetchMyIP };
+const fetchCoordsByIP = function(ip, callback) {
+  request(`http://ipwho.is/${ip}`, (error, response, body) => {
+
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    const parsedBody = JSON.parse(body);
+
+    if (!parsedBody.success) {
+      const message = `Success status was ${parsedBody.success}. Server message says: ${parsedBody.message} when fetching for IP ${parsedBody.ip}`;
+      callback(Error(message), null);
+      return;
+    }
+
+    const { latitude, longitude } = parsedBody;
+
+    callback(null, { latitude, longitude });
+  });
+};
+
+module.exports = { fetchMyIP, fetchCoordsByIP };
 
 // HTTPS: https://github.com/eegyudt/iss_spotter.git
 // SSH git@github.com:eegyudt/iss_spotter.git
-
-
-// const request = require('request');
-// request('http://www.google.com', function (error, response, body) {
-//   console.error('error:', error); // Print the error if one occurred
-//   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-//   console.log('body:', body); // Print the HTML for the Google homepage.
-// });
