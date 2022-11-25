@@ -8,6 +8,6 @@ fetchMyIP((error, ip) => {
   }
 
   console.log('It worked! Returned IP:' , ip);
-});
+ });
 // HTTPS: https://github.com/eegyudt/iss_spotter.git
 // SSH git@github.com:eegyudt/iss_spotter.git
